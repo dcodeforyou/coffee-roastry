@@ -1,0 +1,724 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* FORMA/ROAST palette */
+    --bg: #0C0A07;
+    --surface: #141108;
+    --text: #E4DDD1;
+    --muted: #8A8076;
+    --gold: #C9A96E;
+    --gold-dim: rgba(201, 169, 110, 0.1);
+    --border: rgba(228, 221, 209, 0.07);
+
+    /* shadcn defaults remapped to coffee theme */
+    --background: 32 14% 4%;
+    --foreground: 36 22% 86%;
+    --card: 32 18% 6%;
+    --card-foreground: 36 22% 86%;
+    --popover: 32 18% 6%;
+    --popover-foreground: 36 22% 86%;
+    --primary: 38 45% 61%;
+    --primary-foreground: 32 14% 4%;
+    --secondary: 32 14% 10%;
+    --secondary-foreground: 36 22% 86%;
+    --muted: 32 6% 50%;
+    --muted-foreground: 32 6% 50%;
+    --accent: 38 45% 61%;
+    --accent-foreground: 32 14% 4%;
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 36 22% 86%;
+    --radius: 0.25rem;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font-dm-sans), 'DM Sans', sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  ::selection {
+    background-color: var(--gold);
+    color: var(--bg);
+  }
+}
+
+@layer components {
+  /* Nav links: 0.08em tracking with hover underline */
+  .nav-link {
+    font-family: var(--font-dm-sans), 'DM Sans', sans-serif;
+    font-weight: 400;
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    text-transform: uppercase;
+    position: relative;
+    transition: color 220ms ease;
+  }
+  .nav-link:hover {
+    color: var(--gold);
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    height: 1px;
+    width: 0;
+    background-color: var(--gold);
+    transition: width 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 100%;
+  }
+
+  /* Labels / tags */
+  .label-tag {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-family: var(--font-dm-sans), 'DM Sans', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .display-heading {
+    font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
+    font-weight: 600;
+    line-height: 0.95;
+    letter-spacing: -0.015em;
+    color: var(--text);
+  }
+
+  /* Gold pill button */
+  .btn-gold {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: var(--font-dm-sans), 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background-color: transparent;
+    transition: background-color 220ms ease, color 220ms ease;
+  }
+  .btn-gold:hover {
+    background-color: var(--gold);
+    color: var(--bg);
+  }
+
+  /* Footer links */
+  .footer-link {
+    color: var(--muted);
+    font-family: var(--font-dm-sans), 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    transition: color 200ms ease;
+  }
+  .footer-link:hover {
+    color: var(--gold);
+  }
+
+  /* Frosted glass product card */
+  .frost-card {
+    position: relative;
+    background-color: rgba(228, 221, 209, 0.035);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.25rem;
+    overflow: hidden;
+    transition:
+      transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 280ms ease,
+      background-color 280ms ease,
+      box-shadow 280ms ease;
+  }
+  .frost-card:hover {
+    transform: translateY(-6px);
+    background-color: rgba(228, 221, 209, 0.06);
+    border-color: rgba(201, 169, 110, 0.45);
+    box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(201, 169, 110, 0.08);
+  }
+
+  /* Marquee animations */
+  @keyframes marquee-ltr {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
+  }
+  @keyframes marquee-rtl {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+  .marquee-track > * {
+    flex-shrink: 0;
+  }
+  /* Mobile: halve speed (double duration) + drop font-size to 11px */
+  @media (max-width: 767.98px) {
+    .marquee-track {
+      animation-duration: 80s !important;
+    }
+    .marquee-track li,
+    .marquee-track span {
+      font-size: 11px !important;
+    }
+  }
+
+  /* ---------- Shop: Responsive product grid (3 / 2 / 1 columns) ---------- */
+  .forma-products-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 600px) and (max-width: 1023.98px) {
+    .forma-products-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .forma-products-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+  }
+
+  /* ---------- Shop: Responsive 2-col layout (sidebar + grid) ---------- */
+  .forma-shop-grid {
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 1024px) {
+    .forma-shop-grid {
+      grid-template-columns: 220px 1fr;
+    }
+  }
+
+  /* ---------- Hero: responsive sizing ---------- */
+  .forma-hero-collage {
+    transform: translate(-50%, -50%) scale(1);
+    transform-origin: center center;
+  }
+  @media (min-width: 600px) and (max-width: 1023.98px) {
+    .forma-hero {
+      min-height: 90vh !important;
+    }
+    .forma-hero-collage {
+      transform: translate(-50%, -50%) scale(0.8) !important;
+    }
+  }
+  @media (max-width: 599.98px) {
+    .forma-hero {
+      min-height: 85vh !important;
+    }
+    .forma-hero-collage .hero-load-circle,
+    .forma-hero-collage .hero-load-rect {
+      display: none !important;
+    }
+    .forma-hero-collage {
+      transform: translate(-50%, -50%) scale(0.62) !important;
+    }
+  }
+
+  /* ---------- Contact page: diagonal background strips ---------- */
+  @keyframes forma-strip-ltr {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @keyframes forma-strip-rtl {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
+  }
+  .forma-strip-track-ltr {
+    animation-name: forma-strip-ltr;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    will-change: transform;
+  }
+  .forma-strip-track-rtl {
+    animation-name: forma-strip-rtl;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    will-change: transform;
+  }
+
+  /* ---------- Contact form: input focus styling ---------- */
+  .forma-input::placeholder {
+    color: rgba(228,221,209,0.2);
+    font-style: italic;
+  }
+  .forma-input:focus {
+    border-bottom-color: rgba(201,169,110,0.9) !important;
+    box-shadow: 0 4px 20px rgba(201,169,110,0.08);
+    color: var(--text);
+  }
+  .forma-select:focus {
+    border-color: rgba(201,169,110,0.9) !important;
+    box-shadow: 0 0 0 1px rgba(201,169,110,0.2);
+  }
+  .forma-send-btn:hover:not(:disabled) {
+    background: rgba(201,169,110,0.1) !important;
+    border-color: rgba(201,169,110,0.9) !important;
+  }
+
+  /* ---------- Contact form fade transitions ---------- */
+  @keyframes forma-fade-out {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-6px); }
+  }
+  @keyframes forma-fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .forma-fade-out {
+    animation: forma-fade-out 300ms cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+  }
+  .forma-fade-in {
+    animation: forma-fade-in 400ms cubic-bezier(0.25,0.46,0.45,0.94) both;
+  }
+
+  /* ---------- Shop: Product card hover ---------- */
+  .forma-product-card:hover {
+    border-color: rgba(201, 169, 110, 0.32) !important;
+    box-shadow:
+      0 24px 50px -22px rgba(0, 0, 0, 0.85),
+      0 0 0 1px rgba(201, 169, 110, 0.06);
+  }
+  .forma-product-card:hover .forma-flare {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  .forma-product-card:hover .forma-flare-2 {
+    opacity: 0.85;
+    transform: scaleX(1);
+  }
+  /* Slide-up Add to Cart on hover — only for non-open cards (equipment) */
+  .forma-product-card:not(.forma-card-open):hover .forma-add-btn {
+    height: 48px !important;
+  }
+
+  /* Card with selector open: subtle gold border emphasis */
+  .forma-product-card.forma-card-open {
+    border-color: rgba(201, 169, 110, 0.35) !important;
+    box-shadow:
+      0 28px 56px -22px rgba(0, 0, 0, 0.9),
+      0 0 0 1px rgba(201, 169, 110, 0.08);
+  }
+
+  /* Toast pop-in animation */
+  @keyframes toast-pop {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* ---------- Video player transitions ---------- */
+  @keyframes forma-vp-grow {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes forma-vp-rise {
+    from {
+      opacity: 0;
+      transform: translateY(120px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes forma-vp-overlay-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes forma-vp-dot-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(201, 169, 110, 0.55);
+    }
+    50% {
+      opacity: 0.65;
+      transform: scale(0.92);
+      box-shadow: 0 0 0 5px rgba(201, 169, 110, 0);
+    }
+  }
+
+  /* ---------- Hero collage: smoke drift ---------- */
+  @keyframes forma-smoke-drift {
+    0% {
+      opacity: 0.9;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-35px);
+    }
+  }
+
+  /* ---------- Hero per-letter color-shift (lit on overlap) ---------- */
+  .hero-letter {
+    display: inline-block;
+    position: relative;
+    color: var(--text);
+    -webkit-text-stroke: 0px transparent;
+    filter: none;
+    transition:
+      color 550ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      -webkit-text-stroke 550ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      filter 550ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: color, filter;
+    paint-order: stroke fill;
+  }
+  .hero-letter.lit {
+    color: rgba(201, 169, 110, 0.95);
+    -webkit-text-stroke: 0.6px #0C0A07;
+    filter:
+      drop-shadow(0 0 10px rgba(201, 169, 110, 0.45))
+      drop-shadow(0 0 3px rgba(228, 221, 209, 0.25))
+      drop-shadow(0 0 20px rgba(201, 169, 110, 0.15));
+    paint-order: stroke fill;
+  }
+  @media (pointer: coarse) {
+    .hero-letter,
+    .hero-letter.lit {
+      color: var(--text) !important;
+      -webkit-text-stroke: 0px transparent !important;
+      filter: none !important;
+    }
+  }
+
+  /* ---------- (A) Hero load sequence ---------- */
+  @keyframes forma-load-est {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes forma-load-arch {
+    from { opacity: 0; transform: perspective(900px) rotateX(-18deg) scale(0.92); }
+    to   { opacity: 1; transform: perspective(900px) rotateX(0deg) scale(1); }
+  }
+  @keyframes forma-load-word {
+    from { opacity: 0; transform: translateZ(-60px); }
+    to   { opacity: 1; transform: translateZ(0); }
+  }
+  @keyframes forma-load-circle {
+    from { opacity: 0; transform: translateX(-40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes forma-load-rect {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes forma-load-rise {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes forma-load-pop {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes forma-load-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* Initial hidden states for all load-animated hero elements */
+  .hero-load-est       { opacity: 0; animation: forma-load-est 400ms cubic-bezier(0.25,0.46,0.45,0.94) 200ms both; }
+  .hero-load-arch      { opacity: 0; animation: forma-load-arch 800ms cubic-bezier(0.25,0.46,0.45,0.94) 350ms both; transform-origin: center 70%; }
+  .hero-load-circle    { opacity: 0; animation: forma-load-circle 400ms cubic-bezier(0.25,0.46,0.45,0.94) 700ms both; }
+  .hero-load-rect      { opacity: 0; animation: forma-load-rect 400ms cubic-bezier(0.25,0.46,0.45,0.94) 750ms both; }
+  .hero-load-stats     { opacity: 0; animation: forma-load-rise 500ms cubic-bezier(0.25,0.46,0.45,0.94) 900ms both; }
+  .hero-load-buttons   { opacity: 0; animation: forma-load-pop 350ms cubic-bezier(0.25,0.46,0.45,0.94) 1000ms both; }
+  .hero-load-orbit     { opacity: 0; animation: forma-load-fade 600ms cubic-bezier(0.25,0.46,0.45,0.94) 1100ms both; }
+
+  /* Headline words: enter one by one with translateZ + stagger */
+  .hero-word {
+    display: inline-block;
+    transform-style: preserve-3d;
+    opacity: 0;
+    animation: forma-load-word 500ms cubic-bezier(0.25,0.46,0.45,0.94) both;
+  }
+
+  /* ---------- (C) Scroll 3D reveals ---------- */
+  .reveal {
+    opacity: 0;
+    transform: perspective(800px) rotateX(-10deg) translateY(35px);
+    transition: opacity 700ms ease,
+                transform 700ms cubic-bezier(0.25,0.46,0.45,0.94);
+    animation: reveal-fallback 0s 2.2s forwards;
+  }
+  .reveal.in-view {
+    opacity: 1;
+    transform: perspective(800px) rotateX(0deg) translateY(0);
+    animation: none;
+  }
+
+  /* ---------- (D) Shop card 3D tilt baseline ---------- */
+  .forma-product-card {
+    transform: perspective(900px) rotateX(0) rotateY(0) scale(1);
+    transition: transform 400ms ease-out;
+    will-change: transform;
+  }
+  /* Disable existing scale on hover from earlier styles when we use 3D tilt */
+  .forma-product-card.forma-card-3d {
+    transition: none;
+  }
+
+  /* ---------- (E) Marquee 3D depth wrap ---------- */
+  .marquee-3d {
+    perspective: 600px;
+    transform-style: preserve-3d;
+  }
+  .marquee-3d > * {
+    transform: rotateX(4deg);
+    transform-origin: center top;
+  }
+
+  /* ---------- (G) Cart glow on add ---------- */
+  @keyframes forma-cart-ring {
+    0%   { transform: translate(-50%, -50%) scale(1);   opacity: 0.7; }
+    100% { transform: translate(-50%, -50%) scale(2.8); opacity: 0; }
+  }
+  @keyframes forma-cart-icon-glow {
+    0%   { filter: drop-shadow(0 0 0px rgba(201,169,110,0)); }
+    35%  { filter: drop-shadow(0 0 16px rgba(201,169,110,0.9)); }
+    100% { filter: drop-shadow(0 0 0px rgba(201,169,110,0)); }
+  }
+  @keyframes forma-cart-icon-shake {
+    0%   { transform: rotate(0deg); }
+    20%  { transform: rotate(-14deg); }
+    40%  { transform: rotate(10deg); }
+    60%  { transform: rotate(-6deg); }
+    100% { transform: rotate(0deg); }
+  }
+  @keyframes forma-cart-badge-bounce {
+    0%   { transform: scale(0); }
+    60%  { transform: scale(1.5); }
+    100% { transform: scale(1); }
+  }
+  .forma-cart-icon.glowing svg {
+    animation:
+      forma-cart-icon-glow 700ms ease-out 1,
+      forma-cart-icon-shake 420ms ease-out 1;
+  }
+  .forma-cart-icon.glowing .forma-cart-ring {
+    animation: forma-cart-ring 650ms ease-out 1 forwards;
+  }
+  .forma-cart-icon.glowing .forma-cart-badge {
+    animation: forma-cart-badge-bounce 380ms cubic-bezier(0.34, 1.56, 0.64, 1) 1;
+  }
+
+  /* ---------- Accessibility / mobile ---------- */
+  @media (pointer: coarse) {
+    .forma-product-card {
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-load-est,
+    .hero-load-arch,
+    .hero-load-circle,
+    .hero-load-rect,
+    .hero-load-stats,
+    .hero-load-buttons,
+    .hero-load-orbit,
+    .hero-word {
+      animation: forma-load-fade 300ms ease-out both !important;
+      transform: none !important;
+    }
+    .reveal,
+    .reveal.in-view {
+      transform: none !important;
+    }
+    .marquee-3d > * {
+      transform: none !important;
+    }
+    .forma-product-card {
+      transform: none !important;
+    }
+  }
+}
+
+@layer utilities {
+  .text-text { color: var(--text); }
+  .text-muted { color: var(--muted); }
+  .text-gold { color: var(--gold); }
+  .bg-bg { background-color: var(--bg); }
+  .bg-surface { background-color: var(--surface); }
+  .bg-gold { background-color: var(--gold); }
+  .bg-gold-dim { background-color: var(--gold-dim); }
+  .border-gold { border-color: var(--gold); }
+  .border-soft { border-color: var(--border); }
+
+  /* Grain / noise texture overlay (subtle on dark) */
+  .grain-overlay::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.05;
+    mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 200px 200px;
+  }
+
+  /* ---------- Custom cursor hide ---------- */
+  html.custom-cursor-active,
+  html.custom-cursor-active body,
+  html.custom-cursor-active a,
+  html.custom-cursor-active button,
+  html.custom-cursor-active [role="button"],
+  html.custom-cursor-active label,
+  html.custom-cursor-active img,
+  html.custom-cursor-active svg {
+    cursor: none !important;
+  }
+  html.custom-cursor-active input,
+  html.custom-cursor-active textarea,
+  html.custom-cursor-active [contenteditable="true"] {
+    cursor: text;
+  }
+  @media (pointer: coarse) {
+    html.custom-cursor-active,
+    html.custom-cursor-active body { cursor: auto !important; }
+  }
+
+  /* ---------- Page transition fade ---------- */
+  .page-transition {
+    animation: page-fade-in 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  @keyframes page-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ---------- Flower petal trail ---------- */
+  @keyframes petal-fade {
+    from { opacity: 1; transform: scale(1); }
+    to   { opacity: 0; transform: scale(0.3); }
+  }
+
+  /* ---------- Reveal classes ---------- */
+  [data-reveal-heading] {
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: reveal-text-fallback 0s 2.2s forwards;
+  }
+  [data-reveal-heading].revealed { clip-path: inset(0% 0 0 0); animation: none; }
+
+  [data-reveal-body] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition-delay: 100ms;
+    animation: reveal-fallback 0s 2.2s forwards;
+  }
+  [data-reveal-body].revealed { opacity: 1; transform: translateY(0); animation: none; }
+
+  [data-reveal-card] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: reveal-fallback 0s 2.2s forwards;
+  }
+  [data-reveal-card].revealed { opacity: 1; transform: translateY(0); animation: none; }
+
+  /* Safety fallback — if .reveal stays hidden after 2s, force it visible. */
+  @keyframes reveal-fallback {
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes reveal-text-fallback {
+    to { clip-path: inset(0% 0 0 0); }
+  }
+
+  /* ---------- Image placeholder fallback (dark theme) ---------- */
+  [data-img-placeholder] {
+    position: relative;
+    background-color: var(--surface);
+    border: 1px dashed var(--border);
+  }
+  [data-img-placeholder]::before {
+    content: attr(data-img-placeholder);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-dm-sans), 'DM Sans', sans-serif;
+    font-style: italic;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+    text-align: center;
+    padding: 1.25rem;
+    pointer-events: none;
+    z-index: 0;
+  }
+  [data-img-placeholder] > img,
+  [data-img-placeholder] > picture,
+  [data-img-placeholder] > svg {
+    position: relative;
+    z-index: 1;
+  }
+  [data-img-placeholder].img-loaded::before { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-transition,
+    [data-reveal-heading],
+    [data-reveal-body],
+    [data-reveal-card] {
+      animation: none !important;
+      transition: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      clip-path: none !important;
+    }
+  }
+}
