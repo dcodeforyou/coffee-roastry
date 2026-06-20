@@ -50,6 +50,75 @@ function Wordmark({ size = 'md' }) {
   );
 }
 
+function CartIconLink({ cartCount, glowing, onClick }) {
+  return (
+    <Link
+      href="/cart"
+      aria-label={`Cart (${cartCount} item${cartCount === 1 ? '' : 's'})`}
+      onClick={onClick}
+      className={`forma-cart-icon relative inline-flex items-center justify-center transition ${glowing ? 'glowing' : ''}`}
+      style={{
+        width: 36,
+        height: 36,
+        borderRadius: '50%',
+        color: 'var(--text)',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.color = 'var(--gold)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.color = 'var(--text)';
+      }}
+    >
+      <span
+        aria-hidden="true"
+        className="forma-cart-ring"
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%) scale(1)',
+          width: 28,
+          height: 28,
+          borderRadius: '50%',
+          border: '1.5px solid rgba(201,169,110,0.6)',
+          opacity: 0,
+          pointerEvents: 'none',
+        }}
+      />
+      <ShoppingBag className="w-[18px] h-[18px]" strokeWidth={1.5} />
+      {cartCount > 0 && (
+        <span
+          aria-hidden="true"
+          className="forma-cart-badge"
+          style={{
+            position: 'absolute',
+            top: -2,
+            right: -2,
+            minWidth: 18,
+            height: 18,
+            padding: '0 5px',
+            borderRadius: 9,
+            backgroundColor: 'var(--gold)',
+            color: '#0C0A07',
+            fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: '0.02em',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            lineHeight: 1,
+            boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
+          }}
+        >
+          {cartCount > 99 ? '99+' : cartCount}
+        </span>
+      )}
+    </Link>
+  );
+}
+
 export default function Navigation() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
@@ -166,72 +235,7 @@ export default function Navigation() {
                 if (l.emphasis === 'pill') {
                   return (
                     <li key={l.href} className="inline-flex items-center gap-6">
-                      {/* Cart icon button — sits right before the pill */}
-                      <Link
-                        href="/cart"
-                        aria-label={`Cart (${cartCount} item${cartCount === 1 ? '' : 's'})`}
-                        className={`forma-cart-icon relative inline-flex items-center justify-center transition ${glowing ? 'glowing' : ''}`}
-                        style={{
-                          width: 36,
-                          height: 36,
-                          borderRadius: '50%',
-                          color: 'var(--text)',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = 'var(--gold)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = 'var(--text)';
-                        }}
-                      >
-                        {/* Pulse ring (only animates when .glowing) */}
-                        <span
-                          aria-hidden="true"
-                          className="forma-cart-ring"
-                          style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%) scale(1)',
-                            width: 28,
-                            height: 28,
-                            borderRadius: '50%',
-                            border: '1.5px solid rgba(201,169,110,0.6)',
-                            opacity: 0,
-                            pointerEvents: 'none',
-                          }}
-                        />
-                        <ShoppingBag className="w-[18px] h-[18px]" strokeWidth={1.5} />
-                        {cartCount > 0 && (
-                          <span
-                            aria-hidden="true"
-                            className="forma-cart-badge"
-                            style={{
-                              position: 'absolute',
-                              top: -2,
-                              right: -2,
-                              minWidth: 18,
-                              height: 18,
-                              padding: '0 5px',
-                              borderRadius: 9,
-                              backgroundColor: 'var(--gold)',
-                              color: '#0C0A07',
-                              fontFamily:
-                                "var(--font-dm-sans), 'DM Sans', sans-serif",
-                              fontSize: 10,
-                              fontWeight: 700,
-                              letterSpacing: '0.02em',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              lineHeight: 1,
-                              boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
-                            }}
-                          >
-                            {cartCount > 99 ? '99+' : cartCount}
-                          </span>
-                        )}
-                      </Link>
+                      <CartIconLink cartCount={cartCount} glowing={glowing} />
                       <Link href={l.href} className="btn-gold">
                         {l.label}
                       </Link>
@@ -256,17 +260,20 @@ export default function Navigation() {
               })}
             </ul>
 
-            {/* Mobile hamburger */}
-            <button
-              type="button"
-              aria-label="Open menu"
-              aria-expanded={menuOpen}
-              onClick={() => setMenuOpen((v) => !v)}
-              className="md:hidden inline-flex items-center justify-center w-10 h-10 transition"
-              style={{ color: 'var(--gold)' }}
-            >
-              {menuOpen ? <X className="w-6 h-6" strokeWidth={1.5} /> : <Menu className="w-6 h-6" strokeWidth={1.5} />}
-            </button>
+            {/* Mobile actions */}
+            <div className="md:hidden inline-flex items-center gap-1">
+              <CartIconLink cartCount={cartCount} glowing={glowing} />
+              <button
+                type="button"
+                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={menuOpen}
+                onClick={() => setMenuOpen((v) => !v)}
+                className="inline-flex items-center justify-center w-10 h-10 transition"
+                style={{ color: 'var(--gold)' }}
+              >
+                {menuOpen ? <X className="w-6 h-6" strokeWidth={1.5} /> : <Menu className="w-6 h-6" strokeWidth={1.5} />}
+              </button>
+            </div>
           </div>
         </nav>
       </header>
@@ -279,15 +286,6 @@ export default function Navigation() {
         ].join(' ')}
         style={{ backgroundColor: 'rgba(12,10,7,0.97)' }}
       >
-        <button
-          type="button"
-          aria-label="Close menu"
-          onClick={() => setMenuOpen(false)}
-          className="absolute top-5 right-5 inline-flex items-center justify-center w-10 h-10 transition"
-          style={{ color: 'var(--gold)' }}
-        >
-          <X className="w-6 h-6" strokeWidth={1.5} />
-        </button>
         <div className="h-full w-full flex flex-col justify-center items-center px-8">
           <div className="mb-10">
             <Wordmark size="sm" />
